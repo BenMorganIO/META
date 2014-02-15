@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,
+			initial-scale=1.0,
+			minimum-scale=1.0,
+			maximum-scale=1.0,
+			user-scalable=no">
+		<link href="favicon.png" rel="icon" type="image/x-icon">
+		<link rel="stylesheet" href="css/app.css">
+		<title>
+			META - Micro Expression Training Application
+		</title>
+	</head>
+	<body>
+		<a href="index.html">
+			<div id="home">
+				<h1> Home </h1>
+			</div>
+		</a>
+		<div id="header">
+			<h1> Expressions in META </h1>
+		</div>
+		<ul id="sideButtons">
+			<a href="expressions.html">
+				<li class="head">
+					<h3> Expressions </h3>
+				</li>
+			</a>
+			<a href="exercises.html">
+				<li class="head">
+					<h3> Exercises </h3>
+				</li>
+			</a>
+		</ul>
+		<div id="content">
+			<div id="display">
+				<img src="imgs/black.jpg" id="screen" height="345">
+			</div>
+			<div id="answers">
+				<ul>
+					<li onclick="changeToMetaExpHap()">
+						<h4> Happiness </h4>
+					</li>
+					<li onclick="changeToMetaExpSad()">
+						<h4> Sadness </h4>
+					</li>
+					<li onclick="changeToMetaExpAng()">
+						<h4> Anger </h4>
+					</li>
+					<li onclick="changeToMetaExpDis()">
+						<h4> Disgust </h4>
+					</li>
+					<li onclick="changeToMetaExpFea()">
+						<h4> Fear </h4>
+					</li>
+					<li onclick="changeToMetaExpSur()">
+						<h4> Surprise </h4>
+					</li>
+				</ul>
+			</div>
+			<div id="submit" onclick="muscleLayout()">
+				<h4> Muscle and AU </h4>
+			</div>
+			<div id="writing">
+				<p id="resultWriting">
+					As you click through the six basic emotions, you'll be introduced to the selected emotion at its maximum expression.
+					Every section teaches you how to recognize the emotion through a qualitative means by presenting the relevant codes from the Facial Action Coding System (FACS) and the relevant muscles used.
+					The FACS is a coding system developed to help scientists quantitatively define facial movements through a non-SI dimensional quantity called Action Units (AU).
+					The Muscle and AU option will give you the ability to see the expression with the muscles and AUs laid out on top of the selected emotion.
+				</p>
+			</div>
+		</div>
+		<script>
+			// The amount of people to be shown.
+			var amountOfPeople = 1;
+			
+			var metaExpression = "off",
+				muscleLayoutValue = 0,
+				expressionTime = 3000,
+				element = document.getElementById('resultWriting');
+			
+			function changeToMetaExpHap() {
+				element.innerHTML="In happiness, there is a stretching of the lips in an upward movement (Zygomatic Major muscle [AU12]) with the expresser possibly parting their lips (Depressor Labii muscle or relaxation of Mentalis or Orbicularis Oris muscle [AU25]) and showing their teeth. Crow feet form (Naso-Labial Fold) as the cheek rises (Orbicularis Oculi Pars Orbitalis muscle [AU6]). If the expression is intense, the eyebrows will motion downwards due to the movement of the eyes (Orbicularis Oculi Pars Orbitalis muscle [AU4]). In unfelt happiness, the lips are pulled by the Zygomatic Minor muscle rather than the Zygomatic Major muscle.";
+				metaExpression = "happiness";
+				expressionEval();
+			};
+	
+			function changeToMetaExpSad() {
+				element.innerHTML="In sadness, the eyebrows appear oblique with the inner eyebrows pushed up (Frontalis Pars Medialis muscle [AU1]), the outer eyebrows unmoved, and pressed together (Depressor Supercilli and Corugator muscles [AU4]). The eyes will also appear relaxed and 'glossy' due to the movement of the upper eyelid corner being raised (Levator Palpebrae Superioris [AU5]). In the mouth, the tips of lips will lower (Triangularis muscle [AU15]) making the notable frown.";
+				metaExpression = "sadness";
+				expressionEval();
+			};
+
+			function changeToMetaExpAng() {
+				element.innerHTML="The anger expression in the upper face is created through the lowering of the eyebrows (Procerus, Depressor Supercilli, and Corrugator muscles [AU4]) and the tensing of the upper eyelids (Levator Palpebrae Superioris muscle [AU5]) with the lower eyelids tensed (Orbicularis Oculi Pars Palebralis muscle [AU7]) causing a glare to be made. The nostrils may also be flared, but this is an optional expression (Nasalis Transversa [AU38]). In the lower face, the lips are pressed together (Orbicularis Oris muscle [AU23]), not sucked in, to make the lips appear more horizontal or straighter in nature.";
+				metaExpression = "anger";
+				expressionEval();
+			};
+	
+			function changeToMetaExpDis() {
+				element.innerHTML="For disgust, the eyebrows lower (Procerus, Depressor Supercilli, and Corrugator muscles [AU4]) and the nose wrinkles (Levator Labii Superioris and Levator Labii Superioris Alaeque Nasi muscles [AU9]). The cheek will rise causing multiple lines below the eyes (Orbicularis Oculi Pars Orbitalis muscle [AU7]). The upper lip will rise (Levator Labii Superioris and Caput Infraorbitalis muscles [AU10]) causing the notable snarl that occurs with the lower lip being motioned forward and either being raised or lowered (Orbicularis Oris muscle [AU16]).";
+				metaExpression = "disgust";
+				expressionEval();
+			};
+
+			function changeToMetaExpFea() {
+				element.innerHTML="In fear, the eyebrows will rise (Frontalis muscle [AU1 +AU2]) and become pressed together (Procerus, Depressor Supercilli, and Corrugator muscles [AU4]) creating a horizontal appearance. The upper and lower eyelids in fear are raised (Levator Palpebrae Superioris muscle [AU5]) and tensed (Orbicularis Oculi Pars Palebralis muscle) respectively. In the mouth, the lips will part (Depressor Labii muscle or relaxation of Mentalis or Orbicularis Oris muscles [AU25]) and stretch outwards horizontally (Risorius muscle [AU20]), with the jaw relaxing (Masetter muscle and Temporal and Internal Pterygoid muscles relaxed [AU26]) slightly.";
+				metaExpression = "fear";
+				expressionEval();
+			};
+
+			function changeToMetaExpSur() {
+				element.innerHTML="The surprise expression occurs quite quickly by nature and then motions into another facial expression. The eyebrows in surprise will rise to make a curved arch (Frontalis muscle [AU1 + AU2]) and the jaw will often relax and drop (Masetter muscle with Temporal and Internal Pterygoid muscles relaxed [AU26]), causing the lips and teeth to part (Depressor Labii muscle or relaxation of Mentalis or Orbicularis Oris muscles [AU25]) due to these relaxations. In the eyes, the upper eyelids will become raised (Levator Palprae Superioris muscle [AU5]) revealing the sclera, while the lower eyelids will stay relaxed.";
+				metaExpression = "surprise";
+				expressionEval();
+			};
+	
+			function muscleLayout() {
+				muscleLayoutValue++;
+				expressionEval();
+			};
+	
+			function expressionEval() {
+				var person = Math.floor(Math.random()*amountOfPeople)%amountOfPeople;
+				
+				if (metaExpression == "off") {
+					document.getElementById('screen').src="imgs/black.jpg";
+				} else {
+					if (muscleLayoutValue % 2 == 1) {
+						document.getElementById('screen').src="imgs/"+metaExpression+person+"-m.jpg";
+					} else {
+						document.getElementById('screen').src="imgs/"+metaExpression+person+".jpg";
+					};
+				}
+			};
+			
+			setInterval(function() {expressionEval()}, expressionTime);
+		</script>
+	</body>
+</html>

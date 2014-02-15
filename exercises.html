@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,
+			initial-scale=1.0,
+			minimum-scale=1.0,
+			maximum-scale=1.0,
+			user-scalable=no">
+		<link href="favicon.png" rel="icon" type="image/x-icon">
+		<link rel="stylesheet" href="css/app.css" />
+		<title>
+			META - Micro Expression Training Application
+		</title>
+	</head>
+	<body>
+		<a href="index.html">
+			<div id="home">
+				<h1> Home </h1>
+			</div>
+		</a>
+		<div id="header">
+			<h1> Exercises in META </h1>
+		</div>
+		<ul id="sideButtons">
+			<a href="expressions.html">
+				<li class="head">
+					<h3> Expressions </h3>
+				</li>
+			</a>
+			<a href="exercises.html">
+				<li class="head">
+					<h3> Exercises </h3>
+				</li>
+			</a>
+			<a id="durationOption">
+				<li>
+					<h4>
+						Duration of Expression:
+					</h4>
+					<dl>
+						<dd>
+							<input type="range" min="50" max="1000" id="r" name="r" value="200">
+						</dd>
+						<dt id="durationView"> 200 ms </dt>
+					</dl>
+				</li>
+			</a>
+			<script>
+					var durationOutput,
+						timeCount = 200,
+						r;
+					
+					function supportsRange() {
+						var i = document.createElement('input');
+						i.setAttribute('type', 'range');
+						
+						return i.type === 'range';
+					}
+					
+					if ( supportsRange ) {
+						r = document.querySelector('#r');
+						
+						document.body.addEventListener('change', function() {
+							// This if statement is here to make sure that once the duration has been selected, it stays selected and cannot be edited there after.
+							if (push == 0) {
+								document.getElementById('durationView').innerHTML=r.value + " ms";
+								timeCount = r.value;
+							}
+						}, false);
+					}
+			</script>
+		</ul>
+		<div id="content">
+			<div id="display">
+				<img src="imgs/black.jpg" id="screen" width="#" height="345">
+			</div>
+			<div id="answers" class="start">
+				<ul>
+					<li onclick="inputHap()">
+						<h4> Happiness </h4>
+					</li>
+					<li onclick="inputSad()">
+						<h4> Sadness </h4>
+					</li>
+					<li onclick="inputAng()">
+						<h4> Anger </h4>
+					</li>
+					<li onclick="inputDis()">
+						<h4> Disgust </h4>
+					</li>
+					<li onclick="inputFea()">
+						<h4> Fear </h4>
+					</li>
+					<li onclick="inputSur()">
+						<h4> Surprise </h4>
+					</li>
+				</ul>
+			</div>
+			<div id="submit" onclick="startMetaExer();">
+				<h4 id="metaExerStartButton"> Start </h4>
+			</div>
+			<div id="writing">
+				<p id="resultWriting">
+					When pushing the Start button, this text will disappear, change to the Total Questions as you answer, and you will be presented with a neutral face.
+					In 1/5 of a second, you will see the neutral expression flash into an emotional expression and then back to neutral.
+					Of the six emotions, select which one you believe to be the correct answer.
+					When finished, push the End button to obtain your results.
+					Push the Restart button to clear the past results and the Start button again when you would like to try again.
+					To reduce memory and bias, every person is shown in a random order while showing one of the six emotions.
+				</p>
+			</div>
+		</div>
+		<script>
+			// Amount of People in project
+			var amountOfPeople = 1;
+			
+			// Declaration of emotions
+			var happiness = 0,
+				anger = 0,
+				sadness = 0,
+				disgust = 0,
+				fear = 0,
+				surprise = 0;
+	
+			// The multiPushBug is used to make sure that a user can't score multiple times when they push a button several times in a row.
+			var multiPushBug = 0;
+	
+			var inputHappiness = 0,
+				inputSadness = 0,
+				inputAnger = 0,
+				inputDisgust = 0,
+				inputFear = 0,
+				inputsurprise = 0;
+	
+			var errorHappinessBySadness = 0,
+				errorHappinessByAnger = 0,
+				errorHappinessByDisgust = 0,
+				errorHappinessByFear = 0,
+				errorHappinessBySurprise = 0;
+	
+			var errorSadnessByHappiness = 0,
+				errorSadnessByAnger = 0,
+				errorSadnessByDisgust = 0,
+				errorSadnessByFear = 0,
+				errorSadnessBySurprise = 0;
+	
+			var errorAngerByHappiness = 0,
+				errorAngerBySadness = 0,
+				errorAngerByDisgust = 0,
+				errorAngerByFear = 0,
+				errorAngerBySurprise = 0;
+	
+			var errorDisgustByHappiness = 0,
+				errorDisgustBySadness = 0,
+				errorDisgustByAnger = 0,
+				errorDisgustByFear = 0,
+				errorDisgustBySurprise = 0;
+	
+			var errorFearByHappiness = 0,
+				errorFearBySadness = 0,
+				errorFearByAnger = 0,
+				errorFearByDisgust = 0,
+				errorFearBySurprise = 0;
+	
+			var errorSurpriseByHappiness = 0,
+				errorSurpriseBySadness = 0,
+				errorSurpriseByAnger = 0,
+				errorSurpriseByDisgust = 0,
+				errorSurpriseByFear = 0;
+	
+			var answerHappiness = 0,
+				answerSadness = 0,
+				answerAnger = 0,
+				answerDisgust = 0,
+				answerFear = 0,
+				answerSurprise = 0;
+	
+			var correctEmotionAnswer = 0,
+				correctHappiness = 0,
+				correctSadness = 0,
+				correctAnger = 0,
+				correctDisgust = 0,
+				correctFear = 0,
+				correctSurprise = 0,
+				correctAnswer = 0;
+
+			var totalCorrectAnswers = 0,
+				totalQuestions = 0;
+
+			var result;
+	
+			var push = 0,
+				wait = 0,
+				waitStart = 0,
+				restartPage = 0;
+	
+			var time = 0,
+				startTime = 0,
+				endTime = 0;
+	
+			function startTimer() {
+	    		startTime = new Date().getTime();
+			};
+	
+			function endTimer() {
+	    		endTime = new Date().getTime();
+	    		time = endTime - startTime;
+			};
+	
+			function startMetaExer() {
+				var screen=document.getElementById('screen'),
+					start=document.getElementById('metaExerStartButton');
+				
+				if (waitStart == 0) {
+					// waitStart is used to indicate when the first push of the start button has occured.
+					waitStart++;
+					if (push == 0) {
+						if (restartPage == 1) {
+							location.reload();
+						} else {
+							start.innerHTML="End";
+							document.getElementById("resultWriting").className+="center";
+							document.getElementById("resultWriting").innerHTML="Total Questions Answered: " + totalQuestions;
+							
+							document.getElementById('answers').className += "began";
+							
+							getNeuExpression();
+							setTimeout("getExpression()", 1500);
+							
+							push++;
+							startTimer();
+						};
+					} else {
+						start.innerHTML="Restart";
+						screen.src="imgs/black.jpg";
+						
+						document.getElementById('answers').className = "start";
+						
+						push = 0;
+						restartPage = 0;
+						waitStart = 0;
+						
+						endTimer();
+						
+						result();
+					};
+				};
+			};
+			
+			function nextMetaExer() {
+				if (wait == 0) {
+					wait++;
+					if (push == 0) {
+						document.getElementById('screen').src="imgs/black.jpg";
+					} else {
+						getNeuExpression();
+						setTimeout("getExpression()", 1500);
+						document.getElementById("resultWriting").innerHTML="Total Questions Answered: " + totalQuestions;
+					};
+				};
+			};
+	
+			var person = 0;
+	
+			var timeCounterStart = 0,
+				timeCounterEnd = 0;
+	
+			function getExpressionModel(emotion, personNum) {
+				document.getElementById('screen').src="imgs/"+emotion+personNum+".jpg";
+				setTimeout("getNeuExpressionPerson("+personNum+")", timeCount);
+			}
+			
+			function getExpression() {
+				var n = Math.floor(Math.random()*6)%6;
+				switch(n) {
+					case 0:
+						getExpressionModel("happiness", person);
+						happiness = 1;
+						answerHappiness++;
+						break
+					case 1:
+						getExpressionModel("sadness", person);
+						sadness = 1;
+						answerSadness++;
+						break
+					case 2:
+						getExpressionModel("anger", person);
+						anger = 1;
+						answerAnger++;
+						break
+					case 3:
+						getExpressionModel("disgust", person);
+						disgust = 1;
+						answerDisgust++;
+						break
+					case 4:
+						getExpressionModel("fear", person);
+						fear = 1;
+						answerFear++;
+						break
+					case 5:
+						getExpressionModel("surprise", person);
+						surprise = 1;
+						answerSurprise++;
+						break
+				};
+				setTimeout(null, 150);
+				wait = 0;
+				waitStart = 0;
+				multiPushBug = 0;
+			}
+	
+			function getNeuExpression() {
+				person = Math.floor(Math.random()*amountOfPeople)%amountOfPeople;
+				getNeuExpressionPerson(person);
+			};
+			
+			function getNeuExpressionPerson(person) {
+				document.getElementById('screen').src="imgs/neutral"+person+".jpg";
+				timeCounterStart = new Date().getTime();
+			}
+			
+	function errorEmotionEval() {
+		if (happiness == 1) {
+			if (inputSadness == 1) {
+				errorHappinessBySadness++;
+				inputSadness = 0;
+			} else if (inputAnger == 1) {
+				errorHappinessByAnger++;
+				inputAnger = 0;
+			} else if (inputDisgust == 1) {
+				errorHappinessByDisgust++;
+				inputDisgust = 0;
+			} else if (inputFear == 1) {
+				errorHappinessByFear++;
+				inputFear = 0;
+			} else if (inputSurprise == 1) {
+				errorHappinessBySurprise++;
+				inputSurprise = 0;
+			};
+		} else if (sadness == 1) {
+			if (inputHappiness == 1) {
+				errorSadnessByHappiness++;
+				inputHappiness = 0;
+			} else if (inputAnger == 1) {
+				errorSadnessByAnger++;
+				inputAnger = 0;
+			} else if (inputDisgust == 1) {
+				errorSadnessByDisgust++;
+				inputDisgust = 0;
+			} else if (inputFear == 1) {
+				errorSadnessByFear++;
+				inputFear = 0;
+			} else if (inputSurprise == 1) {
+				errorSadnessBySurprise++;
+				inputSurprise = 0;
+			};
+		} else if (anger == 1) {
+			if (inputHappiness == 1) {
+				errorAngerByHappiness++;
+				inputHappiness = 0;
+			} else if (inputSadness == 1) {
+				errorAngerBySadness++;
+				inputSadness = 0;
+			} else if (inputDisgust == 1) {
+				errorAngerByDisgust++;
+				inputDisgust = 0;
+			} else if (inputFear == 1) {
+				errorAngerByFear++;
+				inputFear = 0;
+			} else if (inputSurprise == 1) {
+				errorAngerBySurprise++;
+				inputSurprise = 0;
+			};
+		} else if (disgust == 1) {
+			if (inputHappiness == 1) {
+				errorDisgustByHappiness++;
+				inputHappiness = 0;
+			} else if (inputSadness == 1) {
+				errorDisgustBySadness++;
+				inputSadness = 0;
+			} else if (inputAnger == 1) {
+				errorDisgustByAnger++;
+				inputAnger = 0;
+			} else if (inputFear == 1) {
+				errorDisgustByFear++;
+				inputFear = 0;
+			} else if (inputSurprise == 1) {
+				errorDisgustBySurprise++;
+				inputSurprise = 0;
+			};
+		} else if (fear == 1) {
+			if (inputHappiness == 1) {
+				errorFearByHappiness++;
+				inputHappiness = 0;
+			} else if (inputSadness == 1) {
+				errorFearBySadness++;
+				inputSadness = 0;
+			} else if (inputAnger == 1) {
+				errorFearByAnger++;
+				inputAnger = 0;
+			} else if (inputDisgust == 1) {
+				errorFearByDisgust++;
+				inputDisgust = 0;
+			} else if (inputSurprise == 1) {
+				errorFearBySurprise++;
+				inputSurprise = 0;
+			};
+		} else if (surprise == 1) {
+			if (inputHappiness == 1) {
+				errorSurpriseByHappiness++;
+				inputHappiness = 0;
+			} else if (inputSadness == 1) {
+				errorSurpriseBySadness++;
+				inputSadness = 0;
+			} else if (inputAnger == 1) {
+				errorSurpriseByAnger++;
+				inputAnger = 0;
+			} else if (inputDisgust == 1) {
+				errorSurpriseByDisgust++;
+				inputDisgust = 0;
+			} else if (inputFear == 1) {
+				errorSurpriseByFear++;
+				inputFear = 0;
+			};
+		};
+	};
+	
+	function inputHap() {
+		if (multiPushBug == 0) {
+			if (push == 1) {
+				inputHappiness = 1;
+				multiPushBug = 1;
+				if (happiness == 1) {
+					correctHappiness++;
+					totalCorrectAnswers++;
+					totalQuestions++;
+					happiness = 0;
+					inputHappiness = 0;
+					nextMetaExer();
+				} else {
+					totalQuestions++;
+					errorEmotionEval();
+					happiness = 0;
+					sadness = 0;
+					fear = 0;
+					surprise = 0;
+					anger = 0;
+					disgust = 0;
+					nextMetaExer();
+				};
+			};
+		};
+	};
+	
+	function inputAng() {
+		if (multiPushBug == 0) {
+			if (push == 1) {
+				inputAnger = 1;
+				multiPushBug = 1;
+				if (anger == 1) {
+					correctAnger++;
+					totalCorrectAnswers++;
+					totalQuestions++;
+					anger = 0;
+					inputAnger = 0;
+					nextMetaExer();
+				} else {
+					totalQuestions++;
+					errorEmotionEval()
+					happiness = 0;
+					sadness = 0;
+					fear = 0;
+					surprise = 0;
+					anger = 0;
+					disgust = 0;
+					nextMetaExer();
+				};
+			};
+		};
+	};
+	
+	function inputSad() {
+		if (multiPushBug == 0) {
+			if (push == 1) {
+				inputSadness = 1;
+				multiPushBug = 1;
+				if (sadness == 1) {
+					correctSadness++;
+					totalCorrectAnswers++;
+					totalQuestions++;
+					sadness = 0;
+					inputSadness = 0;
+					nextMetaExer()
+				} else {
+					totalQuestions++;
+					errorEmotionEval();
+					happiness = 0;
+					sadness = 0;
+					fear = 0;
+					surprise = 0;
+					anger = 0;
+					disgust = 0;
+					nextMetaExer();
+				};
+			};
+		};
+	};
+	
+	function inputDis() {
+		if (multiPushBug == 0) {
+			if (push == 1) {
+				inputDisgust = 1;
+				multiPushBug = 1;
+				if (disgust == 1) {
+					correctDisgust++;
+					totalCorrectAnswers++;
+					totalQuestions++;
+					disgust = 0;
+					inputDisgust = 0;
+					nextMetaExer();
+				} else {
+					totalQuestions++;
+					errorEmotionEval();
+					disgust = 0;
+					anger = 0;
+					happiness = 0;
+					sadness = 0;
+					fear = 0;
+					surprise = 0;
+					nextMetaExer();
+				};
+			};
+		};
+	};
+	
+	function inputFea() {
+		if (multiPushBug == 0) {
+			if (push == 1) {
+				inputFear = 1;
+				multiPushBug = 1;
+				if (fear == 1) {
+					correctFear++;
+					totalCorrectAnswers++;
+					totalQuestions++;
+					fear = 0;
+					inputFear = 0;
+					nextMetaExer();
+				} else {
+					totalQuestions++;
+					errorEmotionEval();
+					happiness = 0;
+					sadness = 0;
+					anger = 0;
+					disgust = 0;
+					fear = 0;
+					surprise = 0;
+					nextMetaExer();
+				};
+			};
+		};
+	};
+	
+	function inputSur() {
+		if (multiPushBug == 0) {
+			if (push == 1) {
+				inputSurprise = 1;
+				multiPushBug = 1;
+				if (surprise == 1) {
+					correctSurprise++;
+					totalCorrectAnswers++;
+					totalQuestions++;
+					surprise = 0;
+					inputSurprise = 0;
+					nextMetaExer();
+				} else {
+					totalQuestions++;
+					errorEmotionEval();
+					surprise = 0;
+					fear = 0;
+					anger = 0;
+					disgust = 0;
+					happiness = 0;
+					sadness = 0;
+					nextMetaExer();
+				};
+			};
+		};
+	};
+	
+			function result() {
+				var totalHappiness = correctHappiness + " / " + ( answerHappiness - happiness ),
+				totalSadness = correctSadness + " / " + ( answerSadness - sadness ),
+				totalFear = correctFear + " / " + ( answerFear - fear ),
+				totalSurprise = correctSurprise + " / " + ( answerSurprise - surprise ),
+				totalAnger = correctAnger + " / " + ( answerAnger - anger ),
+				totalDisgust = correctDisgust + " / " + ( answerDisgust - disgust );
+		
+			var errorTotalHappiness = errorSadnessByHappiness + errorAngerByHappiness + errorDisgustByHappiness + errorFearByHappiness + errorSurpriseByHappiness,
+				errorTotalSadness = errorHappinessBySadness + errorAngerBySadness + errorDisgustBySadness + errorFearBySadness + errorSurpriseBySadness,
+				errorTotalDisgust = errorSadnessByDisgust + errorAngerByDisgust + errorHappinessByDisgust + errorFearByDisgust + errorSurpriseByDisgust,
+				errorTotalAnger = errorSadnessByAnger + errorHappinessByAnger + errorDisgustByAnger + errorFearByAnger + errorSurpriseByAnger,
+				errorTotalFear = errorSadnessByFear + errorAngerByFear + errorDisgustByFear + errorHappinessByFear + errorSurpriseByFear,
+				errorTotalSurprise = errorSadnessBySurprise + errorAngerBySurprise + errorDisgustBySurprise + errorFearBySurprise + errorHappinessBySurprise;
+		
+				if (push == 0) {
+					totalCorrectAnswers = correctHappiness + correctSadness + correctDisgust + correctAnger + correctFear + correctSurprise;
+					result = totalCorrectAnswers + " / " + totalQuestions;
+					var element = document.getElementById('display');
+					waitStart = 0;
+					var totalMeanTime = ((time - (totalQuestions * 1700)) / totalQuestions);
+					//This is to get rid of  an infinity answer when the time is divided by zero
+					if (totalQuestions == 0) {
+						totalMeanTime = 0;
+					};
+					restartPage = 1;
+					element.innerHTML="<p>" + 
+						"<ul><li><span class=resultWidth>Total Accuracy: </span>"
+							+ result +
+							"<span class=gap>Total Mean Duration: " +
+							totalMeanTime + " ms</span>" +
+							"<br><span class=resultWidth>Total Biases: </span>" +
+							"Happiness: " + errorTotalHappiness +
+							"; Sadness: " + errorTotalSadness +
+							"; Anger: " + errorTotalAnger +
+							"; Disgust: " + errorTotalDisgust +
+							"; Fear: " + errorTotalFear +
+							"; Surprise: " + errorTotalSurprise +
+						"</li>" +
+						"<li><span class=resultWidth>Happiness: </span>"
+							+ totalHappiness +
+							"<br><span class=resultWidth>Biases: </span>" + 
+							"Sadness: " + errorHappinessBySadness + 
+							"; Anger: " + errorHappinessByAnger +
+							"; Disgust: " + errorHappinessByDisgust +
+							"; Fear: " + errorHappinessByFear +
+							"; Surprise: " + errorHappinessBySurprise +
+						"</li>" +
+						"<li><span class=resultWidth>Sadness: </span>"
+							+ totalSadness +
+							"<br><span class=resultWidth>Biases: </span>" +
+							"Happiness: " + errorSadnessByHappiness +
+							"; Anger: " + errorSadnessByAnger +
+							"; Disgust: " + errorSadnessByDisgust +
+							"; Fear: " + errorSadnessByFear +
+							"; Surprise: " + errorSadnessBySurprise +
+						"</li>" +
+						"<li> <span class=resultWidth>Anger: </span>"
+							+ totalAnger +
+							"<br><span class=resultWidth>Biases: </span>" +
+							"Happiness: " + errorAngerByHappiness +
+							"; Sadness: " + errorAngerBySadness +
+							"; Disgust: " + errorAngerByDisgust +
+							"; Fear: " + errorAngerByFear +
+							"; Surprise: " + errorAngerBySurprise +
+						"</li>" +
+						"<li> <span class=resultWidth>Disgust: </span>"
+							+ totalDisgust +
+							"<br><span class=resultWidth>Biases: </span>" +
+							"Happiness: " + errorDisgustByHappiness +
+							"; Sadness: " + errorDisgustBySadness +
+							"; Anger: " + errorDisgustByAnger +
+							"; Fear: " + errorDisgustByFear +
+							"; Surprise: " + errorDisgustBySurprise +
+						"</li>" +
+						"<li> <span class=resultWidth>Fear: </span>"
+							+ totalFear +
+							"<br><span class=resultWidth>Biases:</span>" +
+							"Happiness: " + errorFearByHappiness +
+							"; Sadness: " + errorFearBySadness +
+							"; Anger: " + errorFearByAnger +
+							"; Disgust: " + errorFearByDisgust +
+							"; Surprise: " + errorFearBySurprise +
+						"</li>" +
+						"<li> <span class=resultWidth>Surprise: </span>"
+							+ totalSurprise +
+							"<br> <span class=resultWidth>Biases: </span>" +
+							"Happiness: " + errorSurpriseByHappiness +
+							"; Sadness: " + errorSurpriseBySadness +
+							"; Anger: " + errorSurpriseByAnger +
+							"; Disgust: " + errorSurpriseByDisgust +
+							"; Fear: " + errorSurpriseByFear +
+						"</li></ul>" +
+					"</p>";
+					
+					document.getElementById("resultWriting").innerHTML="Press Restart to clear the results and to go back to the Start page. " +
+						"If you were instructed to take this test, please present these results to them so tat they can add them to their records. " +
+						"It is recommended that there are at least fifty facial expressions in total to allow the findings to be accurate.";
+					document.getElementById("resultWriting").className -= "center";
+				};
+			};
+		</script>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,
+			initial-scale=1.0,
+			minimum-scale=1.0,
+			maximum-scale=1.0,
+			user-scalable=no">
+		<link href="favicon.png" rel="icon" type="image/x-icon">
+		<link rel="stylesheet" href="css/app.css">
+		<title>
+			META - Micro Expression Training Application
+		</title>
+	</head>
+	<body onload=ExpRanSlide()>
+		<div id="titleContent">
+			<nav>
+				<ul>
+					<a href="expressions.html">
+						<li><h2> Expressions </h2></li>
+					</a>
+					<a href="exercises.html">
+						<li><h2> Exercises </h2></li>
+					</a>
+					<a href="about.html">
+						<li><h2> About </h2></li>
+					</a>
+					<a href="glossary.html">
+						<li><h2> Glossary </h2></li>
+					</a>
+				</ul>
+			</nav>
+			<div id="titleScreens">
+				<ul>
+					<li>
+						<h3> Expression Without Muscles </h3>
+						<img alt="Picture without Muscles" id="ExpWOM" />
+					</li>
+					<li>
+						<h3> Expression With Muscles </h3>
+						<img alt="Picture with Muscles" id="ExpWM" />
+					</li>
+				</ul>
+				<script>
+					// Javascript for Expression Slideshow
+					function ExpRanSlide() {
+						var emotion = ["happiness", "sadness", "anger", "disgust", "fear", "surprise"],
+							expression = emotion[Math.floor(Math.random()*6)%6],
+							person = Math.floor(Math.random()*1)%1;
+						
+						document.getElementById('ExpWOM').src="imgs/"+expression+person+".jpg";
+						document.getElementById('ExpWM').src="imgs/"+expression+person+"-m.jpg";
+					}
+					
+					setInterval(function() {ExpRanSlide()}, 4500);
+				</script>
+			</div>
+		</div>
+		<footer>
+			<h1> META - Micro Expression Training Application </h1>
+		</footer>
+	</body>
+</html>
